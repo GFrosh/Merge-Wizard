@@ -1,0 +1,45 @@
+{# Step 2 template — manual conflict resolution + summary of auto-resolved. #}
+{% extends "accounts/base.html" %}
+{% block title %}Step 2 · Resolve conflicts{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2>Step 2: Resolve conflicting fields</h2>
+    <p>Merging <code>{{ source }}</code> → <code>{{ target }}</code></p>
+
+    {# ---- Manual conflicts: show one radio group per conflicting field. ---- #}
+    {% if manual_conflicts %}
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div style="margin-bottom: 14px;">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+          </div>
+        {% endfor %}
+        <button class="btn" type="submit">Next: Confirm →</button>
+      </form>
+    {% else %}
+      {# Nothing for the admin to do here — but we still POST to advance. #}
+      <p><em>No conflicting fields need manual resolution.</em></p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn" type="submit">Next: Confirm →</button>
+      </form>
+    {% endif %}
+  </div>
+
+  {# ---- Auto-resolved fields (one side was empty) ---- #}
+  {% if auto_resolutions %}
+    <div class="card">
+      <h3>Auto-resolved fields</h3>
+      <p>These fields were empty on one account, so the populated value was
+         kept automatically:</p>
+      <ul>
+        {% for name, value in auto_resolutions.items %}
+          <li><strong>{{ name|cut:"_"|title }}</strong>: <code>{{ value }}</code></li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endblock %}

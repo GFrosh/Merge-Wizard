@@ -1,0 +1,52 @@
+{# Step 3 template — final review & "Confirm Merge" button. #}
+{% extends "accounts/base.html" %}
+{% block title %}Step 3 · Confirm merge{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2>Step 3: Review &amp; confirm</h2>
+
+    <table>
+      <tr><th style="width:30%;">Source (will be deleted)</th>
+          <td><code>{{ source }}</code></td></tr>
+      <tr><th>Target (survives)</th>
+          <td><code>{{ target }}</code></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Final field values on target after merge</h3>
+    {% if resolutions %}
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          {% for name, value in resolutions.items %}
+            <tr><td>{{ name|cut:"_"|title }}</td>
+                <td><code>{{ value|default:"(empty)" }}</code></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p><em>No field changes — every comparable field already matched.</em></p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Related records that will be reassigned</h3>
+    <ul>
+      {% for label, n in related_counts.items %}
+        <li><strong>{{ label|title }}</strong>: {{ n }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <button class="btn danger" type="submit">⚠ Confirm Merge</button>
+      <a class="btn secondary" href="{% url 'accounts:step1' %}"
+         style="text-decoration:none; display:inline-block;">Cancel</a>
+    </p>
+    <p><small>This action is wrapped in a database transaction.
+       If anything fails, no data will be lost.</small></p>
+  </form>
+{% endblock %}

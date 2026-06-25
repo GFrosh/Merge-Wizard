@@ -1,0 +1,41 @@
+{# Step 1 template — pick source + target user. #}
+{% extends "accounts/base.html" %}
+{% block title %}Step 1 · Select accounts{% endblock %}
+{% block content %}
+  {# Tell base.html which step lamp to light up. #}
+  {% with current_step=1 %}{% endwith %}
+
+  <div class="card">
+    <h2>Step 1: Select the two accounts</h2>
+    <p>Pick the <strong>source</strong> account (it will be absorbed and deleted)
+       and the <strong>target</strong> account (it survives with all merged data).</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {# Non-field errors include the "source != target" rule from the form. #}
+      {% if form.non_field_errors %}
+        <div class="errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <label>{{ form.source.label }}</label>
+      {{ form.source }}
+      {% if form.source.errors %}<div class="errors">{{ form.source.errors }}</div>{% endif %}
+      <small>{{ form.source.help_text }}</small>
+
+      <label style="margin-top: 16px;">{{ form.target.label }}</label>
+      {{ form.target }}
+      {% if form.target.errors %}<div class="errors">{{ form.target.errors }}</div>{% endif %}
+      <small>{{ form.target.help_text }}</small>
+
+      <p style="margin-top: 20px;">
+        <button class="btn" type="submit">Next: Resolve conflicts →</button>
+      </p>
+    </form>
+  </div>
+
+  {# Re-render the step bar with current_step in scope. #}
+  <script>/* progress bar shown above */</script>
+{% endblock %}
+{# Override the step indicator by injecting current_step into context. #}
+{% block extra %}{% endblock %}

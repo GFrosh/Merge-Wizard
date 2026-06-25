@@ -1,0 +1,12 @@
+{# Success page after a merge completes. #}
+{% extends "accounts/base.html" %}
+{% block title %}Merge complete{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2>✅ Merge complete</h2>
+    <p>The source account has been absorbed and deleted. All related records
+       have been reassigned to the target account.</p>
+    <p><a class="btn" href="{% url 'accounts:step1' %}"
+          style="text-decoration:none; display:inline-block;">Run another merge</a></p>
+  </div>
+{% endblock %}
