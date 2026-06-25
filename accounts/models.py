@@ -37,6 +37,7 @@ class User(AbstractUser):
         "email",
         "phone_number",
         "address",
+        "posts",  # related_name for the Post model's ForeignKey to User
     ]
 
     def __str__(self) -> str:  # pragma: no cover - trivial
